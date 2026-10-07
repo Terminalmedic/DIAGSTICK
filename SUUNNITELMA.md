@@ -95,17 +95,14 @@ Yhteinen kirjasto löytää tikun osiot **levyn nimen (labelin)** perusteella, e
 ### 5.1 Käynnistys ja valikko
 | Skripti | Tehtävä |
 |---|---|
-| `Start.cmd` / `Start.ps1` | Pääsyvalikko (TUI): kysyy tikettinumeron, luo tapauskansion ja näyttää työkalut luokittain |
+| `Start.cmd` / `Start.ps1` | **Toteutettu.** Pyytää järjestelmänvalvojan oikeudet, kysyy tiketin, luo tapauskansion CASES-osiolle ja listaa `Scripts`-kansion skriptit sekä toimintaohjeet, työkalukansion ja tapauskansion |
 | `winpe\startnet.cmd` | WinPE:n käynnistys: verkko päälle, osiot labelin perusteella, valikko |
-| `lib\Common.psm1` | Yhteiset funktiot: osioiden etsintä, lokitus, järjestelmänvalvojan tarkistus, raporttipohja |
 
 ### 5.2 Vastaanotto ja inventaario
 | Skripti | Tehtävä |
 |---|---|
-| `Intake-Report.ps1` | Valmistaja, malli, sarjanumero, BIOS, CPU, RAM, levyt ja SMART, akku, OS-versio, aktivointi, **BitLockerin tila**, laitteet, joissa on virhe, käynnistysaika ja asennetut ohjelmat. Tulokset HTML:nä ja JSON:na. |
-| `BitLocker-Check.ps1` | Selvittää salauksen ja palautusavaimen **ennen mitään muutoksia**. Pysäyttää työn, jos avain puuttuu. |
+| `Intake-Report.ps1` | **Toteutettu.** Tekstiraportti: valmistaja, malli, sarjanumero, BIOS, CPU, RAM, levyt ja niiden kuluminen, osiot, **BitLocker-palautusavaimet** (tallentuvat salatulle CASES-osiolle), Secure Boot, aktivointi, laitteet, joissa on virhe, järjestelmälokin yleisimmät virheet, akkuraportti ja asennetut ohjelmat. |
 | `Export-Logs.ps1` | Tapahtumalokit (System/Application, 30 vrk), Reliability History, minidumpit, `setupapi`, WER |
-| `Battery-Report.ps1` | `powercfg /batteryreport` ja kulumaprosentti |
 
 ### 5.3 Vianmääritys
 | Skripti | Tehtävä |
@@ -249,8 +246,8 @@ pohjat ja `stick.csv`:n**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, v
 
 ## 9. Toteutuksen vaiheet
 
-1. **Perusta**: laitteiston hankinta, Ventoy ja osiointi, `stick.csv` + `Build-Stick.ps1` (tehty), `Docs\Playbooks.md` (tehty), `lib\Common.psm1`, `Start.ps1`-valikko, joka kysyy ensin oireen ja näyttää vastaavan ohjeen.
-2. **Vastaanotto ja diagnostiikka**: `Intake-Report`, `BitLocker-Check`, `Disk-Health`, `Export-Logs`, `Battery-Report` ja HTML-raporttipohja.
+1. **Perusta**: laitteiston hankinta, Ventoy ja osiointi, `stick.csv` + `Build-Stick.ps1`, `Docs\Playbooks.md`, `Start.cmd` + `Start.ps1` (skriptit tehty).
+2. **Vastaanotto ja diagnostiikka**: `Intake-Report` (tehty), `Disk-Health`, `Export-Logs`.
 3. **Korjaus ja varmuuskopio**: `Repair-System`, resetointiskriptit, `Backup-/Restore-UserData`, `Malware-Sweep`.
 4. **Live-puoli**: oma WinPE (`Build-WinPE`), WinPE-valikko, Linux-skriptit (`Backup-Offline`, `Image-Disk`, `Wipe-Disk` + todistus).
 5. **Asennus ja luovutus**: `autounattend`-variantit, `PostInstall`, `Debloat`, `Handoff-Checklist`.

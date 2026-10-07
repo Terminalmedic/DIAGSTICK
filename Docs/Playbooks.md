@@ -2,8 +2,9 @@
 
 Jokainen ohje alkaa samalla tavalla:
 
-0. **BitLocker ensin.** Jos levy on salattu, etsi palautusavain ennen muutoksia
-   (Microsoft-tili → https://account.microsoft.com/devices/recoverykey).
+0. **Vastaanottoraportti ja BitLocker ensin.** Jos Windows käynnistyy: `TOOLS:\Start.cmd` → `Intake-Report`.
+   Raportti tallentaa myös BitLocker-palautusavaimet tapauskansioon. Jos Windows ei käynnisty,
+   etsi avain Microsoft-tililtä (https://account.microsoft.com/devices/recoverykey).
    Ilman avainta et tee mitään, mikä voi laukaista palautustilan
    (BIOS-päivitys, Secure Bootin muutos tai levyn siirto toiseen koneeseen).
 1. **Tiedot talteen ennen korjausta**, jos niitä on ja levy on epäilyttävä.
