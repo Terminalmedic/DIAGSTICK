@@ -1,0 +1,25 @@
+Target,Dest,Url
+VENTOY,ISO\1-WinPE\HBCD_PE_x64.iso,https://www.hirensbootcd.org/files/HBCD_PE_x64.iso
+VENTOY,ISO\2-Windows\Win11.iso,manual:https://www.microsoft.com/software-download/windows11
+VENTOY,ISO\3-Linux\systemrescue.iso,https://sourceforge.net/projects/systemrescuecd/files/latest/download
+VENTOY,ISO\3-Linux\ubuntu.iso,manual:https://ubuntu.com/download/desktop
+VENTOY,ISO\4-Backup\rescuezilla.iso,github:rescuezilla/rescuezilla 64bit.*\.iso$
+VENTOY,ISO\5-Diag\memtest86plus,https://www.memtest.org/download/v7.20/mt86plus_7.20_x86_64.grub.iso.zip
+VENTOY,ISO\6-Antivirus\eset_sysrescue.iso,https://download.eset.com/com/eset/tools/recovery/rescue_cd/latest/eset_sysrescue_live_enu.iso
+VENTOY,ISO\7-Wipe\shredos.img,github:PartialVolume/shredos.x86_64 x86-64.*\.img$
+VENTOY,ISO\8-Muut\netboot.xyz.iso,https://boot.netboot.xyz/ipxe/netboot.xyz.iso
+TOOLS,Portable\Info\HWiNFO,https://sourceforge.net/projects/hwinfo/files/latest/download
+TOOLS,Portable\Info\Sysinternals,https://download.sysinternals.com/files/SysinternalsSuite.zip
+TOOLS,Portable\Levyt\CrystalDiskInfo,https://sourceforge.net/projects/crystaldiskinfo/files/latest/download
+TOOLS,Portable\Palautus\TestDisk,https://www.cgsecurity.org/testdisk-7.2.win64.zip
+TOOLS,Portable\Palautus\DMDE,manual:https://dmde.com/download.html
+TOOLS,Portable\Rasitus\OCCT.exe,https://www.ocbase.com/download/edition:Personal
+TOOLS,Portable\Haitta\KVRT.exe,https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe
+TOOLS,Portable\Haitta\AdwCleaner.exe,https://downloads.malwarebytes.com/file/adwcleaner
+TOOLS,Portable\Haitta\msert.exe,https://go.microsoft.com/fwlink/?LinkId=212732
+TOOLS,Portable\Ajurit\DDU.exe,manual:https://www.wagnardsoft.com/display-driver-uninstaller-DDU-
+TOOLS,Portable\Ajurit\SDIO,manual:https://www.glenn.delahoy.com/snappy-driver-installer-origin/
+TOOLS,Portable\Etatuki\RustDesk.exe,github:rustdesk/rustdesk x86_64\.exe$
+TOOLS,Portable\Yleiset\KeePassXC,github:keepassxreboot/keepassxc Win64\.zip$
+TOOLS,Portable\Yleiset\Rufus.exe,github:pbatard/rufus p\.exe$
+TOOLS,Portable\Yleiset\Ventoy,github:ventoy/Ventoy windows\.zip$

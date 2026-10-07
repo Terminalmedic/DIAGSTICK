@@ -25,10 +25,10 @@ Pohjana on **Ventoy**, jossa on varattu tilaa omille osioille (`-r` / *Reserve s
 
 | # | Nimi | Tiedostojärjestelmä | Koko (2 TB) | Sisältö |
 |---|---|---|---|---|
-| 1 | `VENTOY` | exFAT | 600 GB | ISO-, WIM-, VHD(X)- ja IMG-kuvat sekä `ventoy/ventoy.json` |
+| 1 | `VENTOY` | exFAT | 100 GB | ISO-, WIM-, VHD(X)- ja IMG-kuvat sekä `ventoy/ventoy.json` |
 | 2 | `VTOYEFI` | FAT16 | 32 MB | Ventoyn käynnistyslatain (luodaan automaattisesti) |
 | 3 | `TOOLS` | NTFS | 250 GB | Portable-ohjelmat, skriptit, ajurit, offline-asennuspaketit ja dokumentaatio |
-| 4 | `CASES` | NTFS + BitLocker *tai* VeraCrypt | 1 TB | Asiakkaiden varmuuskopiot ja raportit, **aina salattuna** |
+| 4 | `CASES` | NTFS + BitLocker *tai* VeraCrypt | loput (~1,5 TB) | Asiakkaiden varmuuskopiot ja raportit, **aina salattuna** |
 | 5 | `LINUX` | ext4 | 100 GB | Pysyvä tallennus (persistence) Linux-liveille, `ddrescue`-kuvat ja -lokit |
 
 Secure Boot: Ventoyn `ENROLL_THIS_KEY_IN_MOKMANAGER.cer` rekisteröidään koneisiin
@@ -39,82 +39,51 @@ tarvittaessa. Muuten Secure Boot otetaan väliaikaisesti pois päältä ja
 
 ## 3. Live- ja käynnistyskuvat (`VENTOY`-osio)
 
-### 3.1 Windows-pohjaiset (WinPE)
-- **Oma WinPE** (Windows ADK + WinPE add-on). Mukana tallennusohjainten ajurit
-  (Intel RST/VMD, AMD RAID, NVMe), verkkokorttien ajurit, PowerShell,
-  .NET ja oma käynnistysvalikko. Tämä on **pääasiallinen työkalu**, koska sen
-  sisällön tietää tarkalleen.
-- **Hiren's BootCD PE**: ilmainen ja laillinen WinPE, jossa on valmiit työkalut.
-- **Windows 11 -asennusmedia** (virallinen ISO, uusin versio) + `autounattend.xml`-variantit
-  (paikallinen tili, ei bloatia, ohitetaan TPM-/verkkovaatimus vain asiakkaan luvalla).
-- **Windows 10 22H2 -asennusmedia** (vanhoille koneille niin kauan kuin tarvitaan).
-- **Windows 11 VHDX** (Ventoyn `vhdboot`-lisäosa): täysi Windows tikulta, kun WinPE ei riitä
-  (esim. ohjelmat, jotka vaativat täyden Windowsin).
+Jokaiseen tehtävään yksi **ensisijainen** ja yksi **vara**. Kaikki ladataan
+`stick.csv`-luettelon perusteella (ks. luku 5.8).
 
-### 3.2 Linux-pohjaiset
-- **SystemRescue**: yleistyökalu (`ddrescue`, `smartctl`, `nvme-cli`, `testdisk`, `chntpw`, `rsync`, GParted).
-- **Ubuntu LTS / Fedora Workstation Live**: graafinen ympäristö, laitteistotestit, asiakkaalle näytettävät demot.
-- **GParted Live**: osiointi.
-- **Clonezilla Live** ja **Rescuezilla**: levykuvat ja kloonaus.
-- **ShredOS (nwipe)**: sertifioitava levyjen tyhjennys ja raportti.
-- **Memtest86+** (avoin) ja **PassMark MemTest86** (UEFI, ilmaisversio).
-- **ESET SysRescue Live**: virustorjunta koneesta, jonka Windows ei käynnisty.
-- **Kaspersky Rescue Disk**: toinen mielipide, jos saatavilla ja yrityksen linjaus sallii.
-- **Ultimate Boot CD**: vanhat BIOS-ajan levytestit (MHDD, HDAT2, valmistajien työkalut).
-- **ChromeOS Flex**: vanhan koneen uusiokäyttö asiakkaan pyynnöstä.
-- **netboot.xyz**: kaikki muu verkon kautta.
-- *(valinnainen)* **Kali Linux**: verkkovianmääritys. Vain omissa ja asiakkaan luvalla tutkittavissa verkoissa.
+| Tehtävä | Ensisijainen | Vara |
+|---|---|---|
+| Windows-ympäristö tikulta | Hiren's BootCD PE | oma WinPE (vaihe 4) |
+| Windowsin asennus | Windows 11 -ISO (virallinen) | – |
+| Linux-yleistyökalu (ddrescue, smartctl, GParted, chntpw, nmap) | SystemRescue | Ubuntu LTS Live |
+| Levykuva ja kloonaus | Rescuezilla | `ddrescue`/`partclone` SystemRescuessa |
+| Muistitesti | Memtest86+ | Windowsin muistintarkistus |
+| Virustorjunta tikulta | ESET SysRescue Live | KVRT Hiren'sissä |
+| Levyn tyhjennys | ShredOS | `nvme sanitize` / `hdparm` SystemRescuessa |
+| Kaikki muu | netboot.xyz | – |
 
-### 3.3 Valmistajien diagnostiikka
-- Lenovo Diagnostics bootable, Dell ePSA/SupportAssist -ohjeet, HP PC Hardware Diagnostics UEFI
-  (kopioidaan ESP:hen tarvittaessa), Seagate SeaTools Bootable, WD Dashboard -ohjeet.
+Pudotettu: Windows 10 (kuluttajien ESU päättyy 13.10.2026), Fedora,
+GParted Live ja Clonezilla (sisältyvät SystemRescueen ja Rescuezillaan),
+PassMark MemTest86, Ultimate Boot CD, Kaspersky Rescue Disk, ChromeOS Flex, Kali
+ja Windows 11 VHDX. Lisätään takaisin, jos jotain oikeasti kaivataan.
+
+Valmistajien diagnostiikka (Lenovo, Dell, HP, Seagate) ajetaan koneen omasta
+BIOSista tai ladataan tarvittaessa. Niitä ei pidetä tikulla.
+
+Kuvien yhteiskoko on noin 20 GB. 1 TB:n levy riittää hyvin, ja suurin osa tilasta jää varmuuskopioille.
 
 ---
 
 ## 4. Portable-ohjelmat (`TOOLS\Portable`)
 
-Ohjelmat järjestetään kansioihin luokittain. Jokaiselle kirjataan `manifest.json`-tiedostoon
-versio, lähde-URL ja SHA256-tiiviste (ks. luku 8).
+| Luokka | Ensisijainen | Vara |
+|---|---|---|
+| Järjestelmätiedot, lämpötilat | HWiNFO | Sysinternals Suite (Autoruns, Process Explorer, TCPView) |
+| Levyjen kunto | CrystalDiskInfo | `smartctl` SystemRescuessa |
+| Tietojen palautus | TestDisk/PhotoRec | DMDE |
+| Rasitustesti | OCCT | Memtest86+ (RAM) |
+| Haittaohjelmat | KVRT | Microsoft Safety Scanner (`msert`) + AdwCleaner mainosohjelmiin |
+| Ajurit | valmistajan työkalu | Snappy Driver Installer Origin, DDU näytönohjaimille |
+| Etätuki | RustDesk | Windowsin Pikatuki (Quick Assist) |
+| Salasanat ja avaimet | KeePassXC | – |
+| Asennustikut | Rufus | Ventoy |
 
-### 4.1 Järjestelmätiedot
-HWiNFO, CPU-Z, GPU-Z, HWMonitor, Core Temp, Speccy,
-Sysinternals Suite (Autoruns, Process Explorer, Process Monitor, TCPView, RAMMap, Sigcheck),
-NirSoft-työkalut (BlueScreenView, BatteryInfoView, ProduKey, USBDeview, DevManView, WifiInfoView,
-LastActivityView, FullEventLogView), WhoCrashed, LatencyMon.
-
-### 4.2 Levyt ja tallennus
-CrystalDiskInfo, CrystalDiskMark, Hard Disk Sentinel, Victoria, HD Tune, smartmontools (`smartctl`),
-WizTree, TreeSize Free, DiskGenius, MiniTool Partition Wizard / AOMEI Partition Assistant,
-Hasleo Backup Suite Free, HDD Raw Copy Tool, FastCopy, Rufus, Ventoy2Disk.
-
-### 4.3 Tietojen palautus
-TestDisk/PhotoRec, DMDE (ilmaisversio), Recuva, ShadowExplorer.
-
-### 4.4 Rasitustestit
-OCCT, Prime95, y-cruncher, FurMark, Cinebench, TestMem5 + asetusprofiilit, HeavyLoad,
-Keyboard Test Utility, InjuredPixels (kuolleet pikselit), webkameran ja mikrofonin testisivut offline-HTML:nä.
-
-### 4.5 Haittaohjelmat
-Malwarebytes ADWCleaner, Malwarebytes Free, KVRT, ESET Online Scanner,
-Emsisoft Emergency Kit, HitmanPro, Microsoft Safety Scanner (`msert`), RKill, Farbar Recovery Scan Tool (FRST),
-RogueKiller, Autoruns.
-
-### 4.6 Windowsin korjaus ja ylläpito
-Tweaking.com Windows Repair, Dism++, Display Driver Uninstaller (DDU), NVCleanstall,
-Revo Uninstaller / Bulk Crap Uninstaller, O&O ShutUp10++, Snappy Driver Installer Origin
-(+ offline-ajuripaketit), Windows Update MiniTool, ShowKeyPlus (lisenssiavaimen tarkistus).
-
-### 4.7 Verkko
-Advanced IP Scanner, Angry IP Scanner, Wireshark Portable, Nmap/Zenmap, PuTTY, WinSCP, iperf3,
-NetSetMan, WinMTR, TCPing.
-
-### 4.8 Etätuki
-RustDesk, TeamViewer QuickSupport, AnyDesk.
-
-### 4.9 Yleistyökalut
-7-Zip, Notepad++, Everything, Firefox Portable, SumatraPDF, VLC, ShareX/Greenshot, HashMyFiles,
-KeePassXC (omat salasanat ja tuoteavaimet salattuna), Bulk Rename Utility,
-PortableApps.com Platform -käynnistin.
+Pudotettu, koska Windows tai muut työkalut kattavat ne: CPU-Z, GPU-Z,
+HWMonitor, Speccy, osiointityökalut (Levynhallinta / GParted), 7-Zip
+(Windows 11 avaa 7z- ja rar-paketit), Notepad++, Everything, levytilan
+analyysityökalut, verkkoskannerit (nmap SystemRescuessa), lisävirusskannerit,
+Windowsin korjausohjelmat (DISM ja `sfc` skripteinä) ja selaimet.
 
 ---
 
@@ -181,14 +150,19 @@ Yhteinen kirjasto löytää tikun osiot **levyn nimen (labelin)** perusteella, e
 ### 5.8 Tikun ylläpito
 | Skripti | Tehtävä |
 |---|---|
-| `Update-Tools.ps1` | Lataa uusimmat versiot `manifest.json`-tiedoston lähteistä, tarkistaa allekirjoituksen tai tiivisteen ja päivittää manifestin |
-| `Update-ISOs.ps1` | Tarkistaa ISO-kuvien versiot ja tiivisteet |
-| `Verify-Integrity.ps1` | Vertaa TOOLS- ja VENTOY-osioiden tiivisteitä tunnettuun hyvään tilaan. **Ajetaan jokaisen saastuneen koneen jälkeen.** |
+| `Build-Stick.ps1` | **Toteutettu.** Lataa kaiken `stick.csv`:n mukaan TOOLS- ja VENTOY-osioille (uudelleenajo = päivitys) ja kirjoittaa `SHA256SUMS.csv`:n. `-Verify` vertaa osioita siihen. Korvaa aiemmat Update-Tools-, Update-ISOs- ja Verify-Integrity-skriptit. |
 | `Build-WinPE.ps1` | Rakentaa oman WinPE:n ADK:lla, lisää ajurit, PowerShellin ja valikon |
 | `Gen-VentoyJson.ps1` | Tuottaa `ventoy.json`-tiedoston: valikkoaliakset, luokat, teema ja autoinstall-liitokset |
 | `Purge-Cases.ps1` | Poistaa tapaukset, jotka ovat vanhempia kuin säilytysaika (esim. 30 vrk luovutuksesta), ja kirjaa poistot |
 
----
+`stick.csv`: sarakkeet `Target` (TOOLS/VENTOY), `Dest` ja `Url`.
+- Jos `Dest`:llä on tiedostopääte, ladattu tiedosto tallennetaan sellaisenaan. Jos päätettä ei ole, zip-paketti puretaan kansioksi.
+- `Url` on joko suora osoite, `github:omistaja/repo <regex>` (GitHubin uusimman julkaisun tiedosto) tai `manual:<sivu>`. Käsin ladattavat rivit skripti vain tulostaa.
+
+**Tikku nollasta:** asenna Ventoy2Disk varattua tilaa jättäen → luo osiot
+`TOOLS` ja `CASES` (NTFS) Levynhallinnassa → kloonaa tämä repo `TOOLS:\`-juureen →
+aja `Scripts\Build-Stick.ps1` → hae `manual:`-rivit käsin → aja skripti uudelleen,
+jotta tiivisteet päivittyvät.
 
 ## 6. Muu sisältö (`TOOLS`)
 
@@ -211,14 +185,14 @@ Yhteinen kirjasto löytää tikun osiot **levyn nimen (labelin)** perusteella, e
 ```
 VENTOY:\
 ├── ISO\
-│   ├── 1-WinPE\           (oma WinPE, Hiren's)
-│   ├── 2-Windows\         (Win11, Win10)
-│   ├── 3-Linux\           (SystemRescue, Ubuntu, Fedora, GParted)
-│   ├── 4-Backup\          (Clonezilla, Rescuezilla)
-│   ├── 5-Diag\            (Memtest86+, MemTest86, UBCD, valmistajat)
-│   ├── 6-Antivirus\       (ESET, Kaspersky)
-│   └── 7-Wipe\            (ShredOS)
-├── VHD\                   (Windows 11 To Go -tyyppinen VHDX)
+│   ├── 1-WinPE\           (Hiren's, myöhemmin oma WinPE)
+│   ├── 2-Windows\         (Win11)
+│   ├── 3-Linux\           (SystemRescue, Ubuntu)
+│   ├── 4-Backup\          (Rescuezilla)
+│   ├── 5-Diag\            (Memtest86+)
+│   ├── 6-Antivirus\       (ESET SysRescue)
+│   ├── 7-Wipe\            (ShredOS)
+│   └── 8-Muut\            (netboot.xyz)
 └── ventoy\
     ├── ventoy.json
     ├── autounattend\
@@ -235,10 +209,10 @@ TOOLS:\
 ├── Drivers\
 ├── Offline-Installers\
 ├── Configs\
-├── Docs\
+├── Docs\Playbooks.md      (toimintaohjeet oireittain)
 ├── Templates\
-├── manifest.json
-└── SHA256SUMS
+├── stick.csv              (mitä tikulle ladataan)
+└── SHA256SUMS.csv         (Build-Stick.ps1:n tuottama)
 
 CASES:\  (salattu)
 └── <VVVV-KK-PP>_<tiketti>\
@@ -247,16 +221,17 @@ CASES:\  (salattu)
 ```
 
 Tämä Git-repositorio sisältää `TOOLS`-osion **skriptit, konfiguraatiot, dokumentaation,
-pohjat ja manifestin**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, vaan
-`Update-Tools.ps1` ja `Update-ISOs.ps1` hakevat ne.
+pohjat ja `stick.csv`:n**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, vaan
+`Build-Stick.ps1` hakee ne.
 
 ---
 
 ## 8. Tietoturva ja tietosuoja
 
 - **Tikku itse on riski.** Se kytketään saastuneisiin koneisiin. Siksi:
-  automaattinen käynnistys on pois päältä, `Verify-Integrity.ps1` ajetaan jokaisen
-  haittaohjelmatapauksen jälkeen, kultainen kopio pidetään erillään, ja vakavat
+  automaattinen käynnistys on pois päältä, `Build-Stick.ps1 -Verify` ajetaan
+  puhtaalla koneella jokaisen haittaohjelmatapauksen jälkeen, tikku voidaan rakentaa
+  uudelleen tyhjästä (luku 5.8), ja vakavat
   saastunnat käsitellään **livestä**, ei asennetusta Windowsista.
 - **GDPR:** asiakkaan tiedot tallennetaan vain salattuun `CASES`-osioon, niille
   määritellään säilytysaika (`Purge-Cases.ps1`) ja käsittelystä pyydetään
@@ -274,10 +249,12 @@ pohjat ja manifestin**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, vaan
 
 ## 9. Toteutuksen vaiheet
 
-1. **Perusta**: laitteiston hankinta, Ventoy ja osiointi, hakemistorakenne, `manifest.json`-skeema, `lib\Common.psm1`, `Start.ps1`-valikko.
+1. **Perusta**: laitteiston hankinta, Ventoy ja osiointi, `stick.csv` + `Build-Stick.ps1` (tehty), `Docs\Playbooks.md` (tehty), `lib\Common.psm1`, `Start.ps1`-valikko, joka kysyy ensin oireen ja näyttää vastaavan ohjeen.
 2. **Vastaanotto ja diagnostiikka**: `Intake-Report`, `BitLocker-Check`, `Disk-Health`, `Export-Logs`, `Battery-Report` ja HTML-raporttipohja.
 3. **Korjaus ja varmuuskopio**: `Repair-System`, resetointiskriptit, `Backup-/Restore-UserData`, `Malware-Sweep`.
 4. **Live-puoli**: oma WinPE (`Build-WinPE`), WinPE-valikko, Linux-skriptit (`Backup-Offline`, `Image-Disk`, `Wipe-Disk` + todistus).
 5. **Asennus ja luovutus**: `autounattend`-variantit, `PostInstall`, `Debloat`, `Handoff-Checklist`.
-6. **Ylläpito**: `Update-Tools`, `Update-ISOs`, `Verify-Integrity`, `Gen-VentoyJson`, `Purge-Cases`.
+6. **Ylläpito**: `Gen-VentoyJson`, `Purge-Cases`.
 7. **Myöhemmin**: PXE-käynnistys huollon verkkoon (iPXE + sama sisältö), tapausten raportointi keskitettyyn järjestelmään.
+
+**Testaus:** skriptit testataan oikealla testikoneella ennen kuin niitä käytetään korjattavissa koneissa.
