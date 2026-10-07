@@ -74,10 +74,10 @@ tarvittaessa. Muuten Secure Boot otetaan väliaikaisesti pois päältä ja
 ## 4. Portable-ohjelmat (`TOOLS\Portable`)
 
 Ohjelmat järjestetään kansioihin luokittain. Jokaiselle kirjataan `manifest.json`-tiedostoon
-versio, lähde-URL, SHA256-tiiviste ja lisenssityyppi (ks. luku 8).
+versio, lähde-URL ja SHA256-tiiviste (ks. luku 8).
 
 ### 4.1 Järjestelmätiedot
-HWiNFO, CPU-Z, GPU-Z, HWMonitor, Core Temp, Speccy, AIDA64 Engineer (lisenssi),
+HWiNFO, CPU-Z, GPU-Z, HWMonitor, Core Temp, Speccy,
 Sysinternals Suite (Autoruns, Process Explorer, Process Monitor, TCPView, RAMMap, Sigcheck),
 NirSoft-työkalut (BlueScreenView, BatteryInfoView, ProduKey, USBDeview, DevManView, WifiInfoView,
 LastActivityView, FullEventLogView), WhoCrashed, LatencyMon.
@@ -85,17 +85,17 @@ LastActivityView, FullEventLogView), WhoCrashed, LatencyMon.
 ### 4.2 Levyt ja tallennus
 CrystalDiskInfo, CrystalDiskMark, Hard Disk Sentinel, Victoria, HD Tune, smartmontools (`smartctl`),
 WizTree, TreeSize Free, DiskGenius, MiniTool Partition Wizard / AOMEI Partition Assistant,
-Macrium Reflect (lisenssi), HDD Raw Copy Tool, FastCopy, Rufus, Ventoy2Disk.
+Hasleo Backup Suite Free, HDD Raw Copy Tool, FastCopy, Rufus, Ventoy2Disk.
 
 ### 4.3 Tietojen palautus
-TestDisk/PhotoRec, DMDE, R-Studio Technician (lisenssi), Recuva, ShadowExplorer.
+TestDisk/PhotoRec, DMDE (ilmaisversio), Recuva, ShadowExplorer.
 
 ### 4.4 Rasitustestit
 OCCT, Prime95, y-cruncher, FurMark, Cinebench, TestMem5 + asetusprofiilit, HeavyLoad,
 Keyboard Test Utility, InjuredPixels (kuolleet pikselit), webkameran ja mikrofonin testisivut offline-HTML:nä.
 
 ### 4.5 Haittaohjelmat
-Malwarebytes ADWCleaner, Malwarebytes (Techbench-lisenssi), KVRT, ESET Online Scanner,
+Malwarebytes ADWCleaner, Malwarebytes Free, KVRT, ESET Online Scanner,
 Emsisoft Emergency Kit, HitmanPro, Microsoft Safety Scanner (`msert`), RKill, Farbar Recovery Scan Tool (FRST),
 RogueKiller, Autoruns.
 
@@ -109,11 +109,11 @@ Advanced IP Scanner, Angry IP Scanner, Wireshark Portable, Nmap/Zenmap, PuTTY, W
 NetSetMan, WinMTR, TCPing.
 
 ### 4.8 Etätuki
-RustDesk, TeamViewer QuickSupport, AnyDesk (kaupallinen lisenssi).
+RustDesk, TeamViewer QuickSupport, AnyDesk.
 
 ### 4.9 Yleistyökalut
 7-Zip, Notepad++, Everything, Firefox Portable, SumatraPDF, VLC, ShareX/Greenshot, HashMyFiles,
-KeePassXC (huollon salasanat ja lisenssiavaimet salattuna), Bulk Rename Utility,
+KeePassXC (omat salasanat ja tuoteavaimet salattuna), Bulk Rename Utility,
 PortableApps.com Platform -käynnistin.
 
 ---
@@ -202,7 +202,7 @@ Yhteinen kirjasto löytää tikun osiot **levyn nimen (labelin)** perusteella, e
   (Microsoft-tili, AD/Entra), tavallisimmat virhekoodit, tarkistuslistat (vastaanotto, luovutus, tyhjennys),
   asiakkaan suostumuslomake (tietojen käsittely, salasanat, tyhjennys).
 - **Raporttipohjat/**: HTML-pohja vastaanottoraportille, huoltoraportille ja tyhjennystodistukselle.
-- **Avaimet/**: KeePassXC-tietokanta (huollon lisenssit), ei koskaan selväkielisiä tiedostoja.
+- **Avaimet/**: KeePassXC-tietokanta (tuoteavaimet), ei koskaan selväkielisiä tiedostoja.
 
 ---
 
@@ -252,7 +252,7 @@ pohjat ja manifestin**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, vaan
 
 ---
 
-## 8. Tietoturva, tietosuoja ja lisenssit
+## 8. Tietoturva ja tietosuoja
 
 - **Tikku itse on riski.** Se kytketään saastuneisiin koneisiin. Siksi:
   automaattinen käynnistys on pois päältä, `Verify-Integrity.ps1` ajetaan jokaisen
@@ -263,14 +263,12 @@ pohjat ja manifestin**. Binäärit ja ISO-kuvat eivät kuulu repositorioon, vaan
   kirjallinen suostumus. Asiakkaan salasanoja ei tallenneta.
 - **Salasanojen nollaus ja tunnusten ohitus** (esim. `chntpw`) vain laitteen
   todennetun omistajan pyynnöstä, ja toimenpide kirjataan.
-- **Lisenssit:** monet ilmaiset työkalut ovat ilmaisia **vain yksityiskäytössä**.
-  Kaupallisessa huollossa tarvitaan esim. AIDA64 Engineer, Malwarebytes Techbench,
-  R-Studio Technician, Macrium Reflect, HWiNFO Pro, TeamViewer/AnyDesk Business,
-  Hard Disk Sentinel Pro, PassMark-lisenssit. `manifest.json`-tiedoston kenttä
-  `license` kertoo, kumpi on kyseessä.
-- **Ei piraattityökaluja.** Ei aktivointikrakkeja eikä "kaiken sisältäviä"
-  kokoelmia, joiden sisällöstä ei ole varmuutta (esim. osa Medicat-/Strelec-sisällöstä).
-  Kaikki ladataan alkuperäisestä lähteestä ja tarkistetaan tiivisteellä.
+- **Lisenssit:** tikku on yksityiskäytössä, joten ilmaisversiot riittävät
+  eikä lisenssejä tarvitse seurata.
+- **Vain tunnetut lähteet.** Ei krakattuja ohjelmia eikä "kaiken sisältäviä"
+  kokoelmia, joiden sisällöstä ei ole varmuutta (esim. osa Medicat-/Strelec-sisällöstä):
+  ne ovat yleinen haittaohjelmien levitysreitti. Kaikki ladataan alkuperäisestä
+  lähteestä ja tarkistetaan tiivisteellä.
 
 ---
 
